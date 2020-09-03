@@ -5,6 +5,7 @@ import (
 	"github.com/pgrau/bookstore-oauth-api/src/domain/access_token"
 	"github.com/pgrau/bookstore-oauth-api/src/http"
 	"github.com/pgrau/bookstore-oauth-api/src/repository/db"
+	"github.com/pgrau/bookstore-oauth-api/src/repository/rest"
 )
 
 var (
@@ -12,7 +13,7 @@ var (
 )
 
 func StartApplication() {
-	atHandler := http.NewHandler(access_token.NewService(db.NewRepository()))
+	atHandler := http.NewHandler(access_token.NewService(rest.NewRestUserRepository(), db.NewRepository()))
 
 	router.GET("/oauth/access_token/:access_token_id", atHandler.GetById)
 	router.POST("/oauth/access_token", atHandler.Create)
