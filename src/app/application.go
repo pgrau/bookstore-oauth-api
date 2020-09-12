@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/pgrau/bookstore-oauth-api/src/domain/access_token"
+	"github.com/pgrau/bookstore-oauth-api/src/service/access_token"
 	"github.com/pgrau/bookstore-oauth-api/src/http"
 	"github.com/pgrau/bookstore-oauth-api/src/repository/db"
 	"github.com/pgrau/bookstore-oauth-api/src/repository/rest"

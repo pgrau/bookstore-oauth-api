@@ -4,12 +4,13 @@ import (
 	"github.com/pgrau/bookstore-oauth-api/lib/error"
 	"github.com/pgrau/bookstore-oauth-api/src/repository/db"
 	"github.com/pgrau/bookstore-oauth-api/src/repository/rest"
+	"github.com/pgrau/bookstore-oauth-api/src/domain/access_token"
 )
 
 type Service interface {
-	GetById(string) (*AccessToken, *error.RestErr)
-	Create(request AccessTokenRequest) (*AccessToken, *error.RestErr)
-	UpdateExpirationTime(AccessToken) *error.RestErr
+	GetById(string) (*access_token.AccessToken, *error.RestErr)
+	Create(request access_token.AccessTokenRequest) (*access_token.AccessToken, *error.RestErr)
+	UpdateExpirationTime(access_token.AccessToken) *error.RestErr
 }
 
 type service struct {
@@ -24,7 +25,7 @@ func NewService(userRepo rest.RestUserRepository, accessTokenRepo db.DbRepositor
 	}
 }
 
-func (s *service) GetById(accessTokenId string) (*AccessToken, *error.RestErr) {
+func (s *service) GetById(accessTokenId string) (*access_token.AccessToken, *error.RestErr) {
 	if len(accessTokenId) == 0 {
 		return nil, error.BadRequest("Invalid access token id")
 	}
@@ -36,7 +37,7 @@ func (s *service) GetById(accessTokenId string) (*AccessToken, *error.RestErr) {
 	return accessToken, nil
 }
 
-func (s *service) Create(request AccessTokenRequest) (*AccessToken, *error.RestErr) {
+func (s *service) Create(request access_token.AccessTokenRequest) (*access_token.AccessToken, *error.RestErr) {
 	if err := request.Validate(); err != nil {
 		return nil, err
 	}
@@ -50,7 +51,7 @@ func (s *service) Create(request AccessTokenRequest) (*AccessToken, *error.RestE
 	}
 
 	// Generate a new access token:
-	at := GetNewAccessToken(user.Id)
+	at := access_token.GetNewAccessToken(user.Id)
 	at.Generate()
 
 	// Save the new access token in Cassandra:
@@ -60,7 +61,7 @@ func (s *service) Create(request AccessTokenRequest) (*AccessToken, *error.RestE
 	return &at, nil
 }
 
-func (s *service) UpdateExpirationTime(at AccessToken) *error.RestErr {
+func (s *service) UpdateExpirationTime(at access_token.AccessToken) *error.RestErr {
 	if err := at.Validate(); err != nil {
 		return err
 	}

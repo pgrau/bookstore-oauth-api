@@ -10,7 +10,7 @@ import (
 
 var (
 	httpClient = rest.RequestBuilder{
-		BaseURL: "http://localhost:8082",
+		BaseURL: "http://localhost:8081",
 		Timeout: 100 * time.Millisecond,
 	}
 )
@@ -44,7 +44,7 @@ func (r *userRepository) LoginUser(email string, password string) (*user.User, *
 			return nil, error.InternalServerError("invalid error interface when trying to login user")
 		}
 
-		return nil, error.InternalServerError("invalid error interface when trying to login user")
+		return nil, &restErr
 	}
 
 	var user user.User
